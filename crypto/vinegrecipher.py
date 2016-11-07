@@ -4,37 +4,36 @@ import time
 
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-def get_key_to_try():
-    with open('/root/Desktop/rockyou.txt', 'r') as f: #wordlist to try
-        bestKeys = {}
-        startTime = time.time()
-        i = 1
-        j = 0
+def print_deciphered(key, encryptedString):
+    decryptMessage(key, encryptedString)
+
+def attempt_keys(message, bestKeys, keyWordList='/root/Desktop/rockyou.txt'):
+    with open(keyWordList, 'r') as f: #wordlist to try
         keyFound = False
         for line in f:
             j += 1
             line = line.strip('\n')
-            #if len(line) == xx: #xx is the length of the key if known
-                #bestKeys = main(line.upper(), bestKeys)
-            bestKeys = main(line.upper(), bestKeys) #comment this out if length of key is known
+            line = 'WHITEWHALE'# just for testing ###############3
+            translated = decryptMessage(line, message)
+            score = is_english(translated)
+            if len(bestKeys) <= 10:
+                newBestKeys[myKey] = score
+            else:
+                for key in bestKeys:
+                    if score > bestKeys[key]:
+                        del newBestKeys[key]
+                        newBestKeys[myKey] = score
+                        break
             for key in bestKeys:
                 if int(bestKeys[key]) > 50: #50 is an arbitrary score number to guess at (don't know a good way to determine this)
                     keyFound = True
             if keyFound:
-                break
-    print 'the best keys are...\n'
-    print bestKeys
-    print '\n'
-    endTime = time.time()
-    hour = (endTime-startTime)/3600 #3600 seconds in an hour
-    minute = ((endTime-startTime)/60) % 60 #60 seconds in a minute
-    second = (endTime-startTime) % 60
-    print 'Time elapsed: %i hour(s) %i minute(s) %i second(s)' % (hour, minute, second)
-    f.close()
+                return bestKeys
+    return bestKeys
 
 def is_english(decryptText):
     #this will check for words that are x letters or shorter
-    f = open('/root/dictionary.txt', 'r')
+    f = open('dictionary.txt', 'r')
     englishWords = []
     for line in f:
         englishWords.append(line.strip('\n'))
@@ -54,30 +53,24 @@ def is_english(decryptText):
     f.close()
     return score
 
-def main(myKey, bestKeys):
+def main(myKey, bestKeys, myMessage=''):
     myMessage = "YHTEQAPSSQWLTLSILYPENZIZSJLVPVIPVWLKDLZRCWZXGEZEWCDHDBRCSIEXHLWKRKTOYIUPVFCLBRDIWULGSPOIYKLHZMMYBLLVPVQGXAYEDXILWGWDVRPMPOWNKDAIHSQSLLEESAMSQAIEMPALPEJKAXIPOEHEPLZRTWYTZJPOMPSNSD"
-    myMode = 'decrypt' # set to 'encrypt' or 'decrypt'
     myKey = myKey.strip('\n')
-    newBestKeys = bestKeys
-    if myMode == 'encrypt':
-        translated = encryptMessage(myKey, myMessage)
-    elif myMode == 'decrypt':
-        translated = decryptMessage(myKey, myMessage)
 
-    score = is_english(translated)
-    if len(bestKeys) <= 10:
-        newBestKeys[myKey] = score
-    else:
-        for key in bestKeys:
-            if score > bestKeys[key]:
-                del newBestKeys[key]
-                newBestKeys[myKey] = score
-                break
+    startTime = time.time()
+    bestKeys = attemptKeys(myMessage)
+
+    print 'the best keys are...\n'
+    for key in bestKeys:
+        print 'Key: %s' % key
+        print 'Message: %s' % decryptMessage(key, myMessage))
+    print '\n'
+    endTime = time.time()
+    hour = (endTime-startTime)/3600 #3600 seconds in an hour
+    minute = ((endTime-startTime)/60) % 60 #60 seconds in a minute
+    second = (endTime-startTime) % 60
+    print 'Time elapsed: %i hour(s) %i minute(s) %i second(s)' % (hour, minute, second)
     return newBestKeys
-
-def encryptMessage(key, message):
-    return translateMessage(key, message, 'encrypt')
-
 
 def decryptMessage(key, message):
     return translateMessage(key, message, 'decrypt')
