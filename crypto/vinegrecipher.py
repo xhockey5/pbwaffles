@@ -7,29 +7,34 @@ LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 def print_deciphered(key, encryptedString):
     decryptMessage(key, encryptedString)
 
-def attempt_keys(message, bestKeys, keyWordList='/root/Desktop/rockyou.txt'):
+def attempt_keys(message, bestKeys, keyWordList):
     with open(keyWordList, 'r') as f: #wordlist to try
+        count = 0
         keyFound = False
-        for line in f:
-            j += 1
-            line = line.strip('\n')
-            line = 'WHITEWHALE'# just for testing ###############3
-            translated = decryptMessage(line, message)
-            score = is_english(translated)
-            if len(bestKeys) <= 10:
-                newBestKeys[myKey] = score
-            else:
-                for key in bestKeys:
-                    if score > bestKeys[key]:
-                        del newBestKeys[key]
+        newBestKeys = bestKeys
+        for myKey in f:
+            count += 1
+            if (count % 1000) == 0:
+                print 'Attempt %i' % count
+            myKey = myKey.strip('\n')
+            translated = decryptMessage(myKey, message)
+            if translated: #checks to make sure there is a decrypted message
+                if translated[0] == 'C': #use this to specify location of a known plaintext character if known
+                    score = is_english(translated)
+                    if len(bestKeys) <= 10:
                         newBestKeys[myKey] = score
-                        break
-            for key in bestKeys:
-                if int(bestKeys[key]) > 50: #50 is an arbitrary score number to guess at (don't know a good way to determine this)
-                    keyFound = True
-            if keyFound:
-                return bestKeys
-    return bestKeys
+                    else:
+                        for key in bestKeys:
+                            if score > bestKeys[key]:
+                                del newBestKeys[key]
+                                newBestKeys[myKey] = score
+                                break
+                    for key in newBestKeys: #checks to see if the right key has been found based on if the score is high enough
+                        if int(newBestKeys[key]) > 70: #50 is an arbitrary score number to guess at (don't know a good way to determine this)
+                            keyFound = True
+                    if keyFound:
+                        return newBestKeys
+    return newBestKeys
 
 def is_english(decryptText):
     #this will check for words that are x letters or shorter
@@ -42,39 +47,28 @@ def is_english(decryptText):
     for word in englishWords:
         if word in decryptText:
             score += 1
-    #maxPos = len(decryptText)/12 #change the mod to speed up script
-    #for currentPos in range(0, maxPos):
-    #    if decryptText[currentPos] in englishWords:
-    #        score += 1
-    #    for i in range(2,maxPos):
-    #        if decryptText[currentPos:currentPos+i] in englishWords:
-    #            score += 1
-    #            break
     f.close()
     return score
 
-def main(myKey, bestKeys, myMessage=''):
-    myMessage = "YHTEQAPSSQWLTLSILYPENZIZSJLVPVIPVWLKDLZRCWZXGEZEWCDHDBRCSIEXHLWKRKTOYIUPVFCLBRDIWULGSPOIYKLHZMMYBLLVPVQGXAYEDXILWGWDVRPMPOWNKDAIHSQSLLEESAMSQAIEMPALPEJKAXIPOEHEPLZRTWYTZJPOMPSNSD"
-    myKey = myKey.strip('\n')
+def main(myMessage='', keyWordList='/root/Desktop/rockyou.txt'):
 
+    bestKeys = {}
     startTime = time.time()
-    bestKeys = attemptKeys(myMessage)
+    bestKeys = attempt_keys(myMessage, bestKeys, keyWordList)
 
     print 'the best keys are...\n'
     for key in bestKeys:
         print 'Key: %s' % key
-        print 'Message: %s' % decryptMessage(key, myMessage))
+        print 'Message: %s' % decryptMessage(key, myMessage)
     print '\n'
     endTime = time.time()
     hour = (endTime-startTime)/3600 #3600 seconds in an hour
     minute = ((endTime-startTime)/60) % 60 #60 seconds in a minute
     second = (endTime-startTime) % 60
     print 'Time elapsed: %i hour(s) %i minute(s) %i second(s)' % (hour, minute, second)
-    return newBestKeys
 
 def decryptMessage(key, message):
     return translateMessage(key, message, 'decrypt')
-
 
 def translateMessage(key, message, mode):
     try:
@@ -115,4 +109,5 @@ def translateMessage(key, message, mode):
 # If vigenereCipher.py is run (instead of imported as a module) call
 # the main() function.
 if __name__ == '__main__':
-    get_key_to_try()
+    myMessage = "YHTEQAPSSQWLTLSILYPENZIZSJLVPVIPVWLKDLZRCWZXGEZEWCDHDBRCSIEXHLWKRKTOYIUPVFCLBRDIWULGSPOIYKLHZMMYBLLVPVQGXAYEDXILWGWDVRPMPOWNKDAIHSQSLLEESAMSQAIEMPALPEJKAXIPOEHEPLZRTWYTZJPOMPSNSD"
+    main(myMessage)
