@@ -1,9 +1,12 @@
-data = open('testfile.txt', 'rb').read()
-outfile = open('outfile.txt', 'wb')
+# Author - pbwaffles
 
-shift = 2
-newbytes = ''
-for byte in data:
-    newbytes += (chr(ord(byte)+shift))
-outfile.write(newbytes)
-outfile.close()
+data = open('testfile.txt', 'rb').read()
+with open('outfile.txt', 'wb') as outfile:
+
+    shift = 2 # shifts the bytes in a file by this amount (in decimal)
+    newbytes = ''
+
+    for byte in data:
+        newbytes += (chr(ord(byte)+shift))
+
+    outfile.write(newbytes)
