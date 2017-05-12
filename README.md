@@ -1,2 +1,1 @@
-# cryyptostrike
-Enigma is an Enigma decryption tool. This is still in progress.
+Manticore may be required to solve some of the challenge binaries
