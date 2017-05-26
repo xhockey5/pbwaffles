@@ -1,2 +1,0 @@
-Level one of BoomBoom cant be solved because an instruction is not currently implemented.
-CPU:INFO: Unimplemented instruction: 0x00000000f7f6e64c:  66 0f 3a 63 ca 1a       pcmpistri       xmm1, xmm2, 0x1a
