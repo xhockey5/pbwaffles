@@ -68,7 +68,7 @@ def is_english(decryptText):
     f.close()
     return score
 
-def main(myMessage='', keyWordList='/root/Desktop/rockyou.txt'):
+def main(myMessage='', keyWordList='/home/waffles/temp.txt'):
     """
     myMessage is the encrypted text that will be decrypted. keyWordList is a string
     of the location for the dictionary to use for keys.
@@ -83,7 +83,7 @@ def main(myMessage='', keyWordList='/root/Desktop/rockyou.txt'):
     print 'the best keys are...\n'
     for key in bestKeys:
         print 'Key: %s' % key
-        print 'Message: %s' % decryptMessage(key, myMessage)
+        print 'Message: %s' % translateMessage(key, myMessage)
     print '\n'
     endTime = time.time()
     hour = (endTime-startTime)/3600 #3600 seconds in an hour
