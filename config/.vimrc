@@ -58,7 +58,8 @@ set showcmd
 " Highlight searches (use <C-L> to temporarily turn off highlighting; see the
 " mapping of <C-L> below)
 set hlsearch
- 
+highlight Search ctermfg=Green
+highlight Search ctermbg=Red
 " Modelines have historically been a source of security vulnerabilities. As
 " such, it may be a good idea to disable them and use the securemodelines
 " script, <http://www.vim.org/scripts/script.php?script_id=1876>.
@@ -113,7 +114,7 @@ set t_vb=
 set cmdheight=2
  
 " Display line numbers on the left
-set number
+"set number
  
 " Quickly time out on keycodes, but never time out on mappings
 set notimeout ttimeout ttimeoutlen=200
@@ -151,6 +152,3 @@ map Y y$
 " Map <C-L> (redraw screen) to also turn off search highlighting until the
 " next search
 nnoremap <C-L> :nohl<CR><C-L>
-
-"Recursively search upwards until a tags file is found
-set tags=tags;/
