@@ -7,13 +7,11 @@ answer2 = "0 0 0 0 0 0"
 answer3 = "0 w 1105"
 answer4 = '12'
 answer5 = 'ahdno'
-answer6 = '\x00, \x00, \x00, \x00, \x00, \x00'
+answer6 = '4 6 3 2 5 1'
 
 p = Popen('./NCL-2016-Post-BoomBoom', stdin=PIPE, stdout=PIPE) #NOTE: no shell=True here
-out = p.communicate(input=os.linesep.join([answer1, answer2, answer3, answer4, answer5]))
-print out
-if 'Nice!' in out:
-    print '*'*100
-    print out
-    print answer6
-    print '*'*100
+answers = [answer1, answer2, answer3, answer4, answer5, answer6]
+out = p.communicate(input=os.linesep.join(answers))
+stdout = out[0].splitlines()
+
+print '\n'.join(stdout)
